@@ -28,24 +28,32 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("mesdata")
 public class MesController
 {
     @Autowired
     private OrderRepository repository;
+    @Autowired
+    private WebSocketController wsController;
     
-    @RequestMapping(value = "/", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/mesdata", method = RequestMethod.POST, consumes = "application/json")
     public void incomingOrderData(@RequestBody Order[] orders)
     {
-        List<Order> orderList = Arrays.asList(orders);
-        repository.save(orderList);
-        System.out.println("New orderList stored.");
+        if(orders.length > 0)
+        {
+            List<Order> orderList = Arrays.asList(orders);
+            repository.save(orderList);
+            System.out.println("New orderList stored.");
+            
+            // Send data to websocket clients
+            wsController.sendMessage(orderList);
+        }
     }
     
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/{ono}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "mesdata/{ono}", method = RequestMethod.GET, produces = "application/json")
     public Order getOrderByONo(@PathVariable long ono)
     {
-        return GuiController.generateOrders()[0];
+        Order o = repository.findByoNo(ono);
+        return o;
     }
 }

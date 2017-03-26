@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  *
  * @author k1400284
  */
-public interface OrderRepository extends MongoRepository<Order, String>
+public interface OrderRepository extends MongoRepository<Order, Long>
 {
-    public Order findByoNo(String orderNumber);
+    public Order findByoNo(Long orderNumber);
 }

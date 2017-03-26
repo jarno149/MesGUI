@@ -1,4 +1,10 @@
 var stompClient;
+var contentTable;
+
+function initializeTableHandler(table)
+{
+    contentTable = table;
+}
 
 function initializeStompClient()
 {
@@ -18,9 +24,21 @@ function connect()
                 stompClient = Stomp.over(socket);
                 stompClient.connect({}, function(frame){
                    console.log(frame); 
-                    stompClient.subscribe('/livedata', function(output){
-                    console.log(output);
-                    stompClient.send("/app/livedata", {}, "asdsad");
+                    stompClient.subscribe('/livedata', function(output)
+                {
+                    var jsonData = JSON.parse(output);
+                    if(jsonData instanceof Array)
+                    {
+                        for(var i = 0; i < jsonData.length; i++)
+                        {
+                            contentTable.addRow(jsonData[i]);
+                        }
+                        
+                    }
+                    else
+                    {
+                        contentTable.addRow(jsonData);
+                    }
                 });
                 });
                 

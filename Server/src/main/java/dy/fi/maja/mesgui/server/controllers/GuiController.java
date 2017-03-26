@@ -8,6 +8,7 @@ package dy.fi.maja.mesgui.server.controllers;
 import dy.fi.maja.mesgui.models.Order;
 import dy.fi.maja.mesgui.models.OrderPosition;
 import dy.fi.maja.mesgui.models.OrderStep;
+import dy.fi.maja.mesgui.server.OrderRepository;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,11 +30,14 @@ public class GuiController
 {
     @Autowired
     private WebSocketController con;
+    @Autowired
+    private OrderRepository orderRepo;
     
     @RequestMapping("/")
     public String index(Model model)
     {
-        model.addAttribute("orders", generateOrders());
+        List<Order> ordersFromDb = orderRepo.findAll();
+        model.addAttribute("orders", ordersFromDb);
         return "index";
     }
     

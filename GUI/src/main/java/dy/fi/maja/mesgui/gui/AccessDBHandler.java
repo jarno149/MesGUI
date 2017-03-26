@@ -69,7 +69,7 @@ public class AccessDBHandler
     
     public OrderStep[] getOrderStepsByOrderNumber(long ono)
     {
-        ResultSet result = executeQuery("SELECT * FROM tblFinStep WHERE tblFinStep.ONo = " + String.valueOf(ono));
+        ResultSet result = executeQuery("SELECT * FROM tblStep WHERE tblStep.ONo = " + String.valueOf(ono));
         List<OrderStep> steps = new ArrayList<>();
         try
         {
@@ -106,7 +106,7 @@ public class AccessDBHandler
     
     public OrderPosition[] getOrderPositionsByOrderNumber(long ono)
     {
-        ResultSet result = executeQuery("SELECT * FROM tblFinOrderPos WHERE tblFinOrderPos.ONo = " + String.valueOf(ono));
+        ResultSet result = executeQuery("SELECT * FROM tblOrderPos WHERE tblOrderPos.ONo = " + String.valueOf(ono));
         List<OrderPosition> orderPoss = new ArrayList<>();
         try
         {
@@ -139,7 +139,7 @@ public class AccessDBHandler
     
     public Order[] getAllOrders()
     {
-        ResultSet result = executeQuery("SELECT * FROM tblFinOrder");
+        ResultSet result = executeQuery("SELECT * FROM tblOrder");
         List<Order> orders = new ArrayList<Order>();
         try
         {

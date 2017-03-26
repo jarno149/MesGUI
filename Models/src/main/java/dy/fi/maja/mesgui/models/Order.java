@@ -133,9 +133,18 @@ public class Order
             {
                 if (step.getStart() != null)
                 {
-                    if (mostRecent == null || mostRecent.getStart().after(step.getStart()))
+                    if(mostRecent == null)
                     {
                         mostRecent = step;
+                    }
+                    else
+                    {
+                        long lastStepTime = mostRecent.getStart().getTime();
+                    long currStepTime = step.getStart().getTime();
+                    if (lastStepTime < currStepTime)
+                    {
+                        mostRecent = step;
+                    }
                     }
                 }
             }

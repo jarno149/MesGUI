@@ -231,15 +231,20 @@ public class MainPageController implements Initializable
                             e.printStackTrace();
                         }
                         Order[] newOrderResult = accessDBHandler.getAllOrders();
-                       // Order[] changedOrders = OrderComparer.getChangedOrders(newOrderResult);
+                        Order[] changedOrders = OrderComparer.getChangedOrders(newOrderResult);
                         
-                       // System.out.println("Changed orders: " + changedOrders.length);
+                        System.out.println("Changed orders: " + changedOrders.length);
+                         
+                        for(int i = 0; i < changedOrders.length; i++)
+                        {
+                            System.out.println("Changed Order: " + String.valueOf(changedOrders[i].getoNo()));
+                        }
                         
-                        if(true /*changedOrders.length > 0*/)
+                        if(changedOrders.length > 0)
                         {
                             Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
                           //  String dataString = g.toJson(changedOrders);
-                          String dataString = g.toJson(newOrderResult);
+                          String dataString = g.toJson(changedOrders);
                             
                             if(appSettings.getConnectionType().equals(ConnectionType.MQTT))
                             {

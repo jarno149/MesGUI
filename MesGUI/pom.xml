@@ -18,8 +18,8 @@
     
     <modules>
         <module>../Models</module>
-        <module>../Server</module>
         <module>../GUI</module>
+        <module>../Server</module>
     </modules>
     
 </project>
