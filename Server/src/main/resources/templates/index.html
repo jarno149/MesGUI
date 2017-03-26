@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Embedded System Project</title>
+		<meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script th:src="@{js/guihelper.js}" src="../static/js/guihelper.js"></script>
+        <script th:src="@{js/table.js}" src="../static/js/table.js"></script>
+        <script th:src="@{js/datahandler.js}" src="../static/js/datahandler.js"></script>
+    
+    <style>
+        .col-sm-6{
+            height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        body{
+            background-color: dimgray;
+        }
+        
+        .tableContainer{
+            overflow: scroll;
+            background-color: white;
+            height: 100%;
+            border-radius: 5px;
+        }
+        
+        .glyphicon{
+            margin-right: 20px;
+        }
+        
+    </style>
+    
+    </head>
+    
+    <body>
+		<div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="tableContainer">
+                        <table class="table table-hover header-fixed">
+                            <thead>
+                                <tr>
+                                    <th>Order number</th>
+                                    <th>Start</th>
+                                    <th>Current step</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activeOrdersTableContent">
+                                
+                                <tr data-th-each="order : ${orders}" th:class="(${order.state} == 0 ? 'success' : (${order.state} == 1 ? 'danger' : 'warning'))" th:id="${order.oNo}" >
+                                    <td data-th-text="${order.oNo}"></td>
+                                    <td data-th-text="${#dates.format(order.start, 'dd.MM.yyyy HH:mm:ss')}"></td>
+                                    <td data-th-text="${order.state}"></td>
+                                    <td><span class="glyphicon glyphicon-info-sign pull-right" th:onclick="'javascript:infoClicked(' + ${order.oNo} + ')'"></span></td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="tableContainer">
+                    <table class='table table-hover header-fixed'>
+                        <thead>
+                            <tr>
+                                <th>Order number</th>
+                                <th>Start</th>
+                                <th>Current step</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+  <div id="popUp" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+    
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 id="modalTitle" class="modal-title">Order</h4>
+        </div>
+        <div class="modal-body">
+                <table class="table" style="overflow: scroll;">
+                    <tbody>
+                        <tr>
+                            <th class="key">OrderPosition</th>
+                            <th>1234</th>
+                        </tr>
+                        <tr>
+                            <th class="key">Start</th>
+                            <th>12.3.2017 22:23:51</th>
+                        </tr>
+                        <tr>
+                            <th class="key">End</th>
+                            <th>12.3.2017 22:26:12</th>
+                        </tr>
+                        <tr>
+                            <th class="key">Step number</th>
+                            <th>121</th>
+                        </tr>
+                        <tr>
+                            <th class="key">Part number</th>
+                            <th>211</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="piechart" style="height: 400px; width:100%;"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+        <script>
+            var activeOrdersTable;
+            var activeOrderNumber;
+            
+            $(document).ready(function()
+            {
+                activeOrdersTable = new Table("activeOrdersTableContent");
+                initializeStompClient();
+                
+                setInterval(addRowTest, 2000);
+                
+                $("#popUp").on('shown.bs.modal', function () {
+                    getDataByOno(activeOrderNumber, function(data)
+                    {
+                        initializePieChart("piechart", data);
+                    });
+                });
+                $("#popUp").on('hidden.bs.modal', function() {
+                   clearPieChart(); 
+                });
+            });
+            
+            function addRowTest()
+            {
+                var id = Math.round(Math.random() * 10 + 1000);
+                var status = Math.round(Math.random() * 2 + 1);
+                var item = { "oNo" : id, "start" : new Date().getTime(), "status" : status};
+                activeOrdersTable.addRow(item);
+            }
+            
+            function infoClicked(id)
+            {
+                document.getElementById("modalTitle").innerHTML = "Order: " + id;
+                activeOrderNumber = id;
+                $("#popUp").modal();
+            }
+            
+            $("#cross").click(function(){
+                getDataByOno(1000, function(data)
+                {
+                    initializePieChart("piechart", data);
+                });
+            });
+            
+            function test()
+            {
+                $("#stepPopup").modal();
+            }
+            
+        </script>
+        
+	</body>
+</html>
+
+

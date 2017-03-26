@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <div>TODO write content</div>
+        <table>
+            <tr data-th-each="t : ${test}">
+                <td data-th-text="${t.oNo}" />
+                <td data-th-text="${#dates.format(t.start, 'dd.MM.yyyy HH:mm:ss')}" />
+                <td data-th-text="${t.state}" />
+            </tr>
+        </table>
+    </body>
+</html>

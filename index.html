@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Embedded System Project</title>
+		<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="gui_helper.js"></script>
+        <script src="table.js"></script>
+    </head>
+    <style>
+        .col-sm-6{
+            height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        body{
+            background-color: dimgray;
+        }
+        
+        .tableContainer{
+            overflow: scroll;
+            background-color: white;
+            height: 100%;
+            border-radius: 5px;
+        }
+        
+        .glyphicon{
+            margin-right: 20px;
+        }
+        
+    </style>
+    
+    <body>
+		<div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="tableContainer">
+                    <table class="table table-hover header-fixed">
+                        <thead>
+                            <tr>
+                                <th>Order number</th>
+                                <th>Start</th>
+                                <th>Current step</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activeOrdersTableContent">
+                            <tr>
+                                <td>1855</td>
+                                <td>16.3.2017 13.22.42</td>
+                                <td>Release part from stopper 2</td>
+                                <td><span class="glyphicon glyphicon-info-sign pull-right" onclick="addRowTest()"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                        </div>
+                </div>
+                <div class="col-sm-6">
+                    <button onclick="addRowTest()">Add</button>
+                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- Modal -->
+  <div id="popUp" class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 id="modalTitle" class="modal-title">Order</h4>
+        </div>
+        <div class="modal-body">
+                <table class="table" style="overflow: scroll;">
+                    <tbody>
+                        <tr>
+                            <th class="key">OrderPosition</th>
+                            <th>1234</th>
+                        </tr>
+                        <tr>
+                            <th class="key">Start</th>
+                            <th>12.3.2017 22:23:51</th>
+                        </tr>
+                        <tr>
+                            <th class="key">End</th>
+                            <th>12.3.2017 22:26:12</th>
+                        </tr>
+                        <tr>
+                            <th class="key">Step number</th>
+                            <th>121</th>
+                        </tr>
+                        <tr>
+                            <th class="key">Part number</th>
+                            <th>211</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="piechart" style="height: 400px; width:100%;"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+        
+        
+        <script>
+            var activeOrdersTable;
+            
+            $(document).ready(function()
+            {
+                activeOrdersTable = new Table("activeOrdersTableContent");
+                
+                setInterval(addRowTest, 2000);
+                
+                $("#popUp").on('shown.bs.modal', function () {
+                    initializePieChart("piechart");
+                });
+                $("#popUp").on('hidden.bs.modal', function() {
+                   clearPieChart(); 
+                });
+            });
+            
+            function addRowTest()
+            {
+                activeOrdersTable.addRow();
+            }
+            
+            function infoClicked(id)
+            {
+                document.getElementById("modalTitle").innerHTML = "Order: " + id;
+                $("#popUp").modal();
+            }
+        </script>
+        
+	</body>
+</html>
+
