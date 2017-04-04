@@ -51,10 +51,10 @@ public class AppRoot implements CommandLineRunner
                 System.err.println("Invalid port-number... Starting server with port 28862...");
             }
         }
-        
+        System.getProperties().put("spring.thymeleaf.cache", false);
         System.getProperties().put("server.port", port);
         System.getProperties().put("spring.data.mongodb.uri", "mongodb://13.69.75.14:27017/mes");
-        System.getProperties().put("spring.thymeleaf.cache", false);
+        
         SpringApplication app = new SpringApplication(AppRoot.class);
         app.setBannerMode(Banner.Mode.OFF);
         app.run();

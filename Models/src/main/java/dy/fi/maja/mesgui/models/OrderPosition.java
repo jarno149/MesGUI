@@ -14,6 +14,17 @@ import java.util.Date;
 public class OrderPosition
 {
     private long oPos;
+    private long oNo;
+
+    public long getoNo()
+    {
+        return oNo;
+    }
+
+    public void setoNo(long oNo)
+    {
+        this.oNo = oNo;
+    }
     private Date planedStart;
     private Date planedEnd;
     private Date start;

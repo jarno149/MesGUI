@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class OrderStep
 {
-
+    private long oNo;
     private long wPNo;
     private long stepNo;
     private String description;
@@ -38,6 +38,16 @@ public class OrderStep
     public long getwPNo()
     {
         return wPNo;
+    }
+    
+    public long getoNo()
+    {
+        return oNo;
+    }
+
+    public void setoNo(long oNo)
+    {
+        this.oNo = oNo;
     }
 
     public void setwPNo(long wPNo)

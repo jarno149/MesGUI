@@ -5,6 +5,7 @@
  */
 package dy.fi.maja.mesgui.server.controllers;
 
+import dy.fi.maja.mesgui.models.ChangedOrdersResult;
 import dy.fi.maja.mesgui.models.Order;
 import dy.fi.maja.mesgui.models.OrderPosition;
 import dy.fi.maja.mesgui.models.OrderStep;
@@ -36,16 +37,17 @@ public class MesController
     private WebSocketController wsController;
     
     @RequestMapping(value = "/mesdata", method = RequestMethod.POST, consumes = "application/json")
-    public void incomingOrderData(@RequestBody Order[] orders)
+    public void incomingOrderData(@RequestBody ChangedOrdersResult changedOrders)
     {
-        if(orders.length > 0)
+        if(changedOrders.getResultsCount() > 0)
         {
-            List<Order> orderList = Arrays.asList(orders);
-            repository.save(orderList);
+            repository.save(changedOrders.getCreatedObjects());
+            repository.save(changedOrders.getModifiedObjects());
+            repository.delete(changedOrders.getRemovedObjects());
             System.out.println("New orderList stored.");
             
             // Send data to websocket clients
-            wsController.sendMessage(orderList);
+            wsController.sendMessage(changedOrders);
         }
     }
     

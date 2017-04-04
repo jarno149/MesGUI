@@ -77,6 +77,7 @@ public class AccessDBHandler
             {
                 OrderStep s = new OrderStep();
                 s.setwPNo(result.getLong("WPNo"));
+                s.setoNo(result.getLong("ONo"));
                 s.setStepNo(result.getLong("StepNo"));
                 s.setDescription(result.getString("Description"));
                 s.setOpNo(result.getLong("OpNo"));
@@ -114,6 +115,7 @@ public class AccessDBHandler
             {
                 OrderPosition pos = new OrderPosition();
                 pos.setoPos(result.getLong("OPos"));
+                pos.setoPos(result.getLong("ONo"));
                 pos.setPlanedStart(result.getTimestamp("PlanedStart"));
                 pos.setPlanedEnd(result.getTimestamp("PlanedEnd"));
                 pos.setStart(result.getTimestamp("Start"));
@@ -164,10 +166,9 @@ public class AccessDBHandler
         return orders.toArray(new Order[0]);
     }
     
-    public Order[] getFinishedOrderByOrderNumber(long ono)
+    public Order getFinishedOrderByOrderNumber(long ono)
     {
         ResultSet result = executeQuery("SELECT * FROM tblFinOrder WHERE ONo = " + String.valueOf(ono));
-        List<Order> orders = new ArrayList<Order>();
         try
         {
             while(result.next())
@@ -183,12 +184,11 @@ public class AccessDBHandler
                 o.setEnabled(result.getBoolean("Enabled"));
                 o.setRelease(result.getTimestamp("Release"));
                 o.setOrderPositions(getFinishedOrderPositionsByOrderNumber(o.getoNo()));
-                orders.add(o);
+                return o;
             }
         }
         catch(Exception e) {e.printStackTrace();}
-        
-        return orders.toArray(new Order[0]);
+        return null;
     }
     
     public OrderPosition[] getFinishedOrderPositionsByOrderNumber(long ono)
@@ -201,6 +201,7 @@ public class AccessDBHandler
             {
                 OrderPosition pos = new OrderPosition();
                 pos.setoPos(result.getLong("OPos"));
+                pos.setoNo(result.getLong("ONo"));
                 pos.setPlanedStart(result.getTimestamp("PlanedStart"));
                 pos.setPlanedEnd(result.getTimestamp("PlanedEnd"));
                 pos.setStart(result.getTimestamp("Start"));

@@ -25,10 +25,6 @@ function initializePieChart(containerId, orderdata)
                 {
                     workingTime += step.end - step.start;
                 }
-                else
-                {
-                    workingTime += new Date().getTime() - step.start;
-                }
             }
         }
     }

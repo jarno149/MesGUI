@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +38,10 @@ public class GuiController
     public String index(Model model)
     {
         List<Order> ordersFromDb = orderRepo.findAll();
-        model.addAttribute("orders", ordersFromDb);
+        List<Order> readyOrders = ordersFromDb.stream().filter(x -> x.getEnd() != null).collect(Collectors.toList());
+        List<Order> pendingOrders = ordersFromDb.stream().filter(x -> x.getEnd() == null).collect(Collectors.toList());
+        model.addAttribute("orders", pendingOrders);
+        model.addAttribute("readyOrders", readyOrders);
         return "index";
     }
     

@@ -124,6 +124,11 @@ public class Order
         return orderPositions;
     }
     
+    public String getMostRecentStepDescription()
+    {
+        return getMostRecentStep().getDescription();
+    }
+    
     public OrderStep getMostRecentStep()
     {
         OrderStep mostRecent = null;

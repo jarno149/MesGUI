@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dy.fi.maja.mesgui.gui.FileListener.FileListenerActions;
 import dy.fi.maja.mesgui.gui.Settings.ConnectionType;
+import dy.fi.maja.mesgui.models.ChangedOrdersResult;
 import dy.fi.maja.mesgui.models.Order;
 import java.io.File;
 import java.net.URL;
@@ -231,16 +232,12 @@ public class MainPageController implements Initializable
                             e.printStackTrace();
                         }
                         Order[] newOrderResult = accessDBHandler.getAllOrders();
-                        Order[] changedOrders = OrderComparer.getChangedOrders(newOrderResult);
+                        ChangedOrdersResult changedOrders = OrderComparer.getChangedOrders(newOrderResult);
                         
-                        System.out.println("Changed orders: " + changedOrders.length);
-                         
-                        for(int i = 0; i < changedOrders.length; i++)
-                        {
-                            System.out.println("Changed Order: " + String.valueOf(changedOrders[i].getoNo()));
-                        }
+                        System.out.println("Changed orders: " + changedOrders.getCreatedObjects().size()
+                        + changedOrders.getModifiedObjects().size() + changedOrders.getRemovedObjects().size());
                         
-                        if(changedOrders.length > 0)
+                        if(changedOrders.getResultsCount() > 0)
                         {
                             Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
                           //  String dataString = g.toJson(changedOrders);

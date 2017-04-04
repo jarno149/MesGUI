@@ -55,7 +55,7 @@
                             </thead>
                             <tbody id="activeOrdersTableContent">
                                 
-                                <tr data-th-each="order : ${orders}" th:class="(${order.state} == 0 ? 'success' : (${order.state} == 1 ? 'danger' : 'warning'))" th:id="${order.oNo}" >
+                                <tr data-th-each="order : ${orders}" th:class="(${order.state} == 10 ? 'success' : (${order.state} == 1 ? 'warning' : 'danger'))" th:id="${order.oNo}" >
                                     <td data-th-text="${order.oNo}"></td>
                                     <td data-th-text="${order.start != null} ? ${#dates.format(order.start, 'dd.MM.yyyy HH:mm:ss')} : ''"></td>
                                     <td data-th-text="${order.state}"></td>
@@ -76,6 +76,14 @@
                                 <th>Current step</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            <tr data-th-each="order : ${readyOrders}" th:class="(${order.state} == 10 ? 'success' : (${order.state} == 1 ? 'warning' : 'danger'))" th:id="${order.oNo}" >
+                                    <td data-th-text="${order.oNo}"></td>
+                                    <td data-th-text="${order.start != null} ? ${#dates.format(order.start, 'dd.MM.yyyy HH:mm:ss')} : ''"></td>
+                                    <td data-th-text="${order.state}"></td>
+                                    <td><span class="glyphicon glyphicon-info-sign pull-right" th:onclick="'javascript:infoClicked(' + ${order.oNo} + ')'"></span></td>
+                                </tr>
+                        </tbody>
                     </table>
                     </div>
                 </div>
@@ -135,7 +143,7 @@
                 initializeTableHandler(activeOrdersTable);
                 initializeStompClient();
                 
-                setInterval(addRowTest, 2000);
+              //  setInterval(addRowTest, 2000);
                 
                 $("#popUp").on('shown.bs.modal', function () {
                     getDataByOno(activeOrderNumber, function(data)
